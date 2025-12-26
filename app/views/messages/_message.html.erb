@@ -1,0 +1,28 @@
+<div id="<%= dom_id message %>" style="margin-bottom: 12px;">
+  
+  <div style="
+      display: inline-block;
+      padding: 10px 16px;
+      background-color: #e9e9eb; 
+      border-radius: 18px;
+      font-size: 15px;
+      line-height: 1.4;
+      max-width: 80%; 
+      word-wrap: break-word;  
+    ">
+    
+    <div style="color: #000;">
+      <%= message.content %>
+    </div>
+
+    <div style="
+        font-size: 11px; 
+        color: #888; 
+        margin-top: 4px; 
+        text-align: right;
+      ">
+      <%= message.created_at.strftime("%H:%M") %>
+    </div>
+    
+  </div>
+</div>

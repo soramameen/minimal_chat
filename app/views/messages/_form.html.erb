@@ -1,0 +1,24 @@
+<%= form_with(model: message, class: "contents") do |form| %>
+  <% if message.errors.any? %>
+    <div id="error_explanation" style="color: red; margin-bottom: 20px;">
+      <h2><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>
+
+      <ul>
+        <% message.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="display: flex; gap: 10px; margin-top: 20px;">
+    <%= form.text_field :content, 
+        style: "flex-grow: 1; padding: 10px;", 
+        placeholder: "メッセージを入力...", 
+        autofocus: true,
+        autocomplete: "off" %>
+
+    <%= form.submit "送信", 
+        style: "padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+  </div>
+<% end %>
