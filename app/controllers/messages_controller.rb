@@ -6,7 +6,6 @@ class MessagesController < ApplicationController
 
   def index
     @messages = Message.all
-    # ↓ この1行を追加してください。
     @message = Message.new 
   end
   # GET /messages/1 or /messages/1.json
@@ -24,21 +23,23 @@ class MessagesController < ApplicationController
 
   # POST /messages or /messages.json
   def create
+    sleep 2
     @message = Message.new(message_params)
+    @message.user_name = session[:user_name]
 
     respond_to do |format|
       if @message.save
         # リダイレクトではなく、フォームをリセットするレスポンスを返す
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
-            Message.new, 
+            "new_message", 
             partial: "messages/form", 
             locals: { message: Message.new }
           )
         end
         format.html { redirect_to messages_url }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :index, status: :unprocessable_entity }
       end
     end
   end  # PATCH/PUT /messages/1 or /messages/1.json

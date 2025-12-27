@@ -1,17 +1,37 @@
-<%= form_with(model: message, class: "contents") do |form| %>
-  <% if message.errors.any? %>
-    <div id="error_explanation" style="color: red; margin-bottom: 20px;">
-      <h2><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>
+<style>
+  .form-flex-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+    position: relative;
+  }
+  .loading-text {
+    display: none;
+    font-size: 0.85em;
+    color: #666;
+    font-weight: bold;
+    white-space: nowrap;
+  }
 
-      <ul>
-        <% message.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  form[submitting] .loading-text,
+  form[aria-busy="true"] .loading-text,
+  form[data-turbo-submitting] .loading-text {
+    display: inline-block !important;
+  }
 
-  <div style="display: flex; gap: 10px; margin-top: 20px;">
+  /* 4. 送信ボタンを薄くする */
+  form[submitting] input[type="submit"],
+  form[aria-busy="true"] input[type="submit"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+</style>
+
+<%= form_with(model: message, id: "new_message", class: "contents") do |form| %>
+  <%# エラー表示は省略 %>
+
+  <div class="form-flex-container">
     <%= form.text_field :content, 
         style: "flex-grow: 1; padding: 10px;", 
         placeholder: "メッセージを入力...", 
@@ -20,5 +40,7 @@
 
     <%= form.submit "送信", 
         style: "padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+
+    <span class="loading-text">送信中...</span>
   </div>
 <% end %>

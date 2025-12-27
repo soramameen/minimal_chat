@@ -1,5 +1,7 @@
 <div id="<%= dom_id message %>" style="margin-bottom: 12px;">
-  
+  <div style="font-size: 12px; color: #666; margin-left: 12px; margin-bottom: 2px;">
+    <%= message.user_name %>
+  </div>
   <div style="
       display: inline-block;
       padding: 10px 16px;
@@ -23,6 +25,4 @@
       ">
       <%= message.created_at.strftime("%H:%M") %>
     </div>
-    
-  </div>
 </div>
