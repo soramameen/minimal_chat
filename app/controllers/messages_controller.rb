@@ -1,52 +1,39 @@
 class MessagesController < ApplicationController
   before_action :set_message, only: %i[ show edit update destroy ]
 
-  # GET /messages or /messages.json
-  # app/controllers/messages_controller.rb
-
-  def index
-    @messages = Message.all
-    @message = Message.new
-  end
-  # GET /messages/1 or /messages/1.json
-  def show
-  end
-
-  # GET /messages/new
-  def new
-    @message = Message.new
-  end
-
   # GET /messages/1/edit
   def edit
   end
 
-  # POST /messages or /messages.json
+  # POST /rooms/:room_id/messages
   def create
-    sleep 2
-    @message = Message.new(message_params)
+    @room = Room.find(params[:room_id])
+    @message = @room.messages.build(message_params)
     @message.user_name = session[:user_name]
 
     respond_to do |format|
       if @message.save
-        # リダイレクトではなく、フォームをリセットするレスポンスを返す
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
-           "new_message",
+            "new_message",
             partial: "messages/form",
-            locals: { message: Message.new }
+            locals: { message: Message.new, room: @room }
           )
         end
-        format.html { redirect_to messages_url }
+        format.html { redirect_to @room }
       else
-        format.html { render :index, status: :unprocessable_entity }
+        # We need to render the room show page, but we need @messages for it
+        @messages = @room.messages
+        format.html { render "rooms/show", status: :unprocessable_entity }
       end
     end
-  end  # PATCH/PUT /messages/2 or /messages/1.json
+  end
+
+  # PATCH/PUT /messages/1
   def update
     respond_to do |format|
       if @message.update(message_params)
-        format.html { redirect_to @message, notice: "Message was successfully updated.", status: :see_other }
+        format.html { redirect_to @message.room, notice: "Message was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @message }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -55,12 +42,13 @@ class MessagesController < ApplicationController
     end
   end
 
-  # DELETE /messages/1 or /messages/1.json
+  # DELETE /messages/1
   def destroy
+    @room = @message.room
     @message.destroy!
 
     respond_to do |format|
-      format.html { redirect_to messages_path, notice: "Message was successfully destroyed.", status: :see_other }
+      format.html { redirect_to @room, notice: "Message was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
