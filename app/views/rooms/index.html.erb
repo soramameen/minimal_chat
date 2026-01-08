@@ -1,0 +1,52 @@
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+  
+  <div style="margin-bottom: 30px; text-align: center;">
+    <h1>チャットルーム一覧</h1>
+    <% if session[:user_name].present? %>
+      <p>ようこそ、<strong><%= session[:user_name] %></strong> さん</p>
+      
+      <div style="margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+        <%= form_with model: @room, class: "new-room-form" do |f| %>
+          <%= f.text_field :name, placeholder: "新しい部屋の名前", style: "padding: 8px; width: 250px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;" %>
+          <%= f.submit "部屋を作る", style: "padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; display: inline-block; text-align: left;">
+        <h3>名前を入力してください</h3>
+        <%= form_with url: set_name_path, local: true do |f| %>
+          <div style="margin-bottom: 10px;">
+            <%= f.text_field :user_name, 
+                placeholder: "あなたの名前", 
+                required: true, 
+                style: "padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;" %>
+          </div>
+          <%= f.submit "チャットを始める", 
+              style: "padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if session[:user_name].present? %>
+    <div id="rooms" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+      <% @rooms.each do |room| %>
+        <a href="<%= room_path(room) %>" style="
+          display: block;
+          padding: 20px;
+          background: white;
+          border: 1px solid #eee;
+          border-radius: 8px;
+          text-decoration: none;
+          color: #333;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          transition: box-shadow 0.2s;
+        ">
+          <h3 style="margin: 0; font-size: 1.1em; margin-bottom: 10px;"><%= room.name %></h3>
+          <span style="color: #007bff; font-size: 0.9em;">移動する →</span>
+        </a>
+      <% end %>
+    </div>
+  <% end %>
+
+</div>

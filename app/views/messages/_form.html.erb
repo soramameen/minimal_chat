@@ -28,7 +28,8 @@
   }
 </style>
 
-<%= form_with(model: message, id: "new_message", class: "contents") do |form| %>
+<% url = message.persisted? ? message_path(message) : room_messages_path(room) %>
+<%= form_with(model: message, url: url, id: "new_message", class: "contents") do |form| %>
   <%# エラー表示は省略 %>
 
   <div class="form-flex-container">
