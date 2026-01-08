@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
 
   def index
     @messages = Message.all
-    @message = Message.new 
+    @message = Message.new
   end
   # GET /messages/1 or /messages/1.json
   def show
@@ -32,8 +32,8 @@ class MessagesController < ApplicationController
         # リダイレクトではなく、フォームをリセットするレスポンスを返す
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
-            "new_message", 
-            partial: "messages/form", 
+           "new_message",
+            partial: "messages/form",
             locals: { message: Message.new }
           )
         end
@@ -42,7 +42,7 @@ class MessagesController < ApplicationController
         format.html { render :index, status: :unprocessable_entity }
       end
     end
-  end  # PATCH/PUT /messages/1 or /messages/1.json
+  end  # PATCH/PUT /messages/2 or /messages/1.json
   def update
     respond_to do |format|
       if @message.update(message_params)
